@@ -101,9 +101,7 @@ acknowledgement of the gap plus a concrete reason to return, an active
 "customer" gets a relationship check-in rather than a sales pitch. See
 `draft_outreach.py`'s `stage_instructions` dict.
 
-Note: `draft_message_via_claude()` is a stub in this repo so it runs without an
-API key for review — the real Anthropic call is commented in the docstring and
-takes one line to wire up.
+Note: `draft_message_via_claude()` calls the real Anthropic API (model `claude-sonnet-4-6`), reading the key from a local `.env` file (excluded from git via `.gitignore`). To run this yourself, create a `.env` file in the project root with `ANTHROPIC_API_KEY=your-key-here`.
 
 **Objection handling:** "skeptical" isn't a pipeline stage in this data —
 checked directly, the same objection ("thinks Fleek is for small resellers")
@@ -146,4 +144,3 @@ visit. Verified this holds on the real data rather than assumed.
   step for real production scale would be a proper DB (Postgres/Supabase)
   with the scoring logic as a batch job, so filtering/ranking runs
   incrementally on new rows rather than reprocessing everything each time.
-  
