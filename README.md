@@ -27,11 +27,16 @@ explicitly warns will fail on name-traps like "Vintage Wines."
 
 Ranking for visit priority combines rating, review count (as a size/footfall
 proxy, log-scaled), price level (a proxy for a more serious/premium operation
-worth the trip), and geographic clustering — a shop with several other genuine
+worth the trip), geographic clustering (a shop with several other genuine
 shops within 500m gets a bonus, since it means you can walk between them on
-the same trip rather than treating every shop as an isolated stop. The bonus
-is capped so clustering acts as a tie-breaker, not the dominant signal over
-shop quality.
+the same trip rather than treating every shop as an isolated stop), and
+contactability. The Readme explicitly frames `website`/`phone`/`price_level`
+together as a single "contactability and rough price positioning" signal —
+checked directly, 19/34 genuine shops have a website and 25/34 have a phone
+on file, both previously unused. A shop you can actually reach ahead of a
+visit (confirm hours, check stock) is worth more than one you'd be showing up
+to cold, so both get a small additive bonus. The clustering bonus is capped
+so it acts as a tie-breaker, not the dominant signal over shop quality.
 
 **Scaling note on clustering:** a naive pairwise distance check across every
 shop is O(n²) — at 30,000 rows that's ~450 million comparisons, on the order
@@ -133,7 +138,12 @@ visit. Verified this holds on the real data rather than assumed.
   source as this data), cross-referenced with Instagram hashtag/location
   search for shops that don't show up cleanly on Maps. Could run on a schedule
   per target city via a simple queue rather than manually.
-- **At 30,000 rows**: the current scripts are pandas-in-memory, which is fine
-  at this scale but would move to a proper DB (Postgres/Supabase) with the
-  scoring logic as a batch job, so filtering/ranking runs incrementally on new
-  rows rather than reprocessing everything each time.
+- **At 30,000 rows**: the clustering step specifically was tested and fixed
+  for this scale (see above — cKDTree, 0.79s at 30,000 simulated rows). The
+  rest of the pipeline (filtering, cleaning, dedup) was also stress-tested at
+  30,000 simulated rows and completed in under 2 seconds. Beyond that, the
+  scripts are currently pandas-in-memory — fine at this scale, but the next
+  step for real production scale would be a proper DB (Postgres/Supabase)
+  with the scoring logic as a batch job, so filtering/ranking runs
+  incrementally on new rows rather than reprocessing everything each time.
+  
