@@ -23,6 +23,10 @@ objection specifically, on top of whatever the stage would normally call for.
 
 import pandas as pd
 import re
+import anthropic
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Known objection patterns -> the specific counter-argument to include.
 # Matched against the notes field, independent of lead_stage.
@@ -150,10 +154,6 @@ def build_prompt(row) -> str:
 
 
 def draft_message_via_claude(prompt: str) -> str:
-    """
-    Wire this up to the Anthropic API (same pattern as the Fleek AM demo tool):
-
-    import anthropic
     client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env
     response = client.messages.create(
         model="claude-sonnet-4-6",
@@ -161,11 +161,6 @@ def draft_message_via_claude(prompt: str) -> str:
         messages=[{"role": "user", "content": prompt}],
     )
     return response.content[0].text
-
-    Left as a stub here so this runs without an API key for review —
-    swap in the real call before recording the Loom.
-    """
-    return "[DRAFT PLACEHOLDER — wire up ANTHROPIC_API_KEY to generate real text]"
 
 
 def main():
@@ -201,6 +196,11 @@ def main():
     print(f"Drafted outreach for {len(out)} sample leads across all stages.")
     print(f"Of which {out['has_objection'].sum()} carry a detected objection to address.")
     print(out[["store_name", "stage", "channel", "has_objection"]].to_string(index=False))
+    print("\n--- Generated messages ---\n")
+    for _, row in out.iterrows():
+        print(f"[{row['stage']}] {row['store_name']} ({row['channel']}, objection={row['has_objection']})")
+        print(row["drafted_message"])
+        print()
 
 
 if __name__ == "__main__":
