@@ -48,14 +48,6 @@ lat/lng to a flat local approximation and uses `scipy.spatial.cKDTree` for
 O(n log n) neighbour lookups. Tested directly at 30,000 simulated rows: 0.79
 seconds, vs. the projected ~75 minutes for the naive approach.
 
-**Optional enrichment (Instagram):** `enrich_shops.py` searches for each
-genuine shop's Instagram presence via SerpAPI (see script docstring for setup
-— requires a free SerpAPI key) and factors follower count into the score, on
-the theory that an active, sizeable following signals a more serious operation
-worth prioritising. Kept as a separate opt-in step rather than baked into
-`filter_shops.py`, since it depends on an external API key the reviewer may
-not have.
-
 ## Part 2 — Outbound + city prioritisation
 
 ```bash
