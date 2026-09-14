@@ -135,6 +135,12 @@ def build_prompt(row) -> str:
             f"assumed no familiarity — don't introduce Fleek as if from scratch."
         )
 
+    output_rule = (
+        "Output ONLY the message text itself — no preamble like 'Here's a draft:', "
+        "no markdown formatting, no word count, no explanation of your choices afterward. "
+        "Just the raw message, ready to send as-is."
+    )
+
     if row.get("best_contact_method") == "in_person_only":
         # No usable remote contact on file — this isn't a message to draft,
         # it's a rep instruction for a shop visit.
@@ -142,14 +148,15 @@ def build_prompt(row) -> str:
             f"This lead ({name}) has no email, phone, or Instagram on file — the only "
             f"way to reach them is an in-person visit. {context} Write a 2-sentence "
             f"briefing note for the rep visiting in person: what to open with and what "
-            f"the objection/context to be aware of is, given: {full_instruction}"
+            f"the objection/context to be aware of is, given: {full_instruction} "
+            f"{output_rule}"
         )
 
     return (
         f"Draft a short {contact_channel} message to a vintage clothing shop/reseller. "
         f"{context} {full_instruction} "
         f"Keep it under 70 words, no corporate tone, sound like a real person who knows "
-        f"the secondhand/vintage clothing trade."
+        f"the secondhand/vintage clothing trade. {output_rule}"
     )
 
 
