@@ -117,10 +117,16 @@ assumes zero familiarity with Fleek, but an objection implies they've already
 heard of us) — the prompt explicitly resolves this rather than leaving it
 silently inconsistent.
 
-**City ranking:** scores each city on physical shop density, total revenue
+City ranking: scores each city on physical shop density, total revenue
 potential, ratio of "warm" leads (replied/negotiating/customer vs. cold), and
 win rate (won vs. lost) — not just raw lead count, since a city full of cold,
-never-converting leads isn't actually a good next bet.
+never-converting leads isn't actually a good next bet. Also factors in total
+follower reach among online resellers in that city: checked the data
+dictionary directly, `followers` is a given column (184/206 leads populated)
+that wasn't being used anywhere — a city where resellers have a large
+combined following represents brand visibility value beyond direct revenue,
+so it's added as a smaller-weighted signal (scaled by /50,000) alongside the
+main revenue and conversion factors, not as a replacement for them.
 
 **A note on design tradeoffs, for the debrief:** the brief lists name, category,
 review text, and rating as signals to combine for filtering. In practice, review
