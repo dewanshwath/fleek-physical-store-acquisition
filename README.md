@@ -6,8 +6,6 @@
 pip install pandas openpyxl python-dateutil anthropic scipy python-dotenv
 ```
 
-**Note:** if you hit a `numpy`/`scipy` import error (e.g. `ModuleNotFoundError: No module named 'numpy._core...'`), this is usually caused by a very new Python version (e.g. 3.14) that these packages don't yet have full stable support for. Fix: create the virtual environment with an older, stable version instead — e.g. `python3.12 -m venv .venv` — then reinstall.
-
 Place the provided workbook in `data/`.
 
 ## Part 1 — Which shops do I visit? (Manchester)
