@@ -9,6 +9,9 @@ Prioritisation logic — a city is worth going after if it has:
    city that's all cold "new" leads, since it means less cold-start work
 4. A reasonable win rate so far (customers won vs. lost), as a signal the
    market actually converts, not just generates leads
+5. Total social reach (followers) among online resellers there — a city
+   with resellers who have a large combined following represents brand
+   visibility value beyond direct revenue, not just a sales metric
 """
 
 import pandas as pd
@@ -26,14 +29,14 @@ def score_city(group: pd.DataFrame) -> dict:
     win_rate = won / max(won + lost, 1)
 
     physical_shops = (group["channel_clean"] == "physical").sum()
+    total_followers = group["followers"].fillna(0).sum()
 
-    # Weighted score — density and revenue matter most for a physical-visit motion,
-    # warmth and win rate are the "is this market actually working" check.
     score = (
         (physical_shops * 2) +
         (total_potential_spend / 1000) +
         (warm_ratio * 20) +
-        (win_rate * 15)
+        (win_rate * 15) +
+        (total_followers / 50_000)
     )
 
     return {
@@ -43,6 +46,7 @@ def score_city(group: pd.DataFrame) -> dict:
         "total_potential_spend_gbp": total_potential_spend,
         "warm_ratio": round(warm_ratio, 2),
         "win_rate": round(win_rate, 2),
+        "total_followers": int(total_followers),
         "priority_score": round(score, 1),
     }
 
@@ -57,7 +61,8 @@ def main():
     result["why"] = result.apply(
         lambda r: f"{r['physical_shops']} physical shops, £{r['total_potential_spend_gbp']:,.0f} "
                   f"potential monthly spend, {r['warm_ratio']*100:.0f}% warm leads, "
-                  f"{r['win_rate']*100:.0f}% win rate",
+                  f"{r['win_rate']*100:.0f}% win rate, {r['total_followers']:,} combined "
+                  f"reseller followers",
         axis=1,
     )
 
