@@ -3,7 +3,7 @@
 ## Setup
 
 ```bash
-pip install pandas openpyxl python-dateutil anthropic scipy
+pip install pandas openpyxl python-dateutil anthropic scipy python-dotenv
 ```
 
 Place the provided workbook in `data/`.
