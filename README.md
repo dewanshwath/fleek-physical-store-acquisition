@@ -51,7 +51,7 @@ seconds, vs. the projected ~75 minutes for the naive approach.
 ## Part 2 — Outbound + city prioritisation
 
 ```bash
-cd part2_outbound_and_prioritization
+cd ../part2_outbound_and_prioritization
 python clean_data.py      # dedupe, canonicalise stages/dates, infer channel
 python draft_outreach.py  # personalised message per lead stage
 python rank_cities.py     # which city to prioritise next
